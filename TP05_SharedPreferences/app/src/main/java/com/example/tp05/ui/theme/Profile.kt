@@ -10,7 +10,7 @@ import androidx.navigation.NavHostController
 import com.example.navifationexample.ui.theme.Destination
 
 @Composable
-fun HomeScreen  (navHostController: NavHostController)
+fun DisplayProfile (navHostController: NavHostController)
 {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -18,10 +18,10 @@ fun HomeScreen  (navHostController: NavHostController)
         modifier = Modifier.fillMaxSize()
     ) {
         Text ("This is the 3rd Screen ")
-        Button(onClick = {navHostController.navigate(Destination.Ecran2.route)}
+        Button(onClick = {navHostController.navigate(Destination.Ecran3.route)}
         )
         {
-            Text ("HomeScreen")
+            Text ("Profile")
         }
 
     }
