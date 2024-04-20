@@ -1,6 +1,7 @@
 package com.example.tp05
 
 import LoginScreen
+import ResList
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.tp05.ui.theme.TP05Theme
+import com.siviwe.composeapp.data.Reservations
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    LoginScreen()
+                    val reservs = Reservations.MyRerv
+
+                    ResList(reservations = reservs)
 
                 }
             }
