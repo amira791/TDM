@@ -12,13 +12,8 @@ class AuthViewModel(private val sharedPreferencesManager: SharedPreferencesManag
     )
 
     fun authenticate(username: String, password: String): Boolean {
-        // Check if the provided username exists
         val storedPassword = users[username]
-        if (storedPassword != null) {
-            // Compare the provided password with the stored password
-            return password == storedPassword
-        }
-        return false
+        return storedPassword == password
     }
 
     fun isLoggedIn(): Boolean {
@@ -32,25 +27,3 @@ class AuthViewModel(private val sharedPreferencesManager: SharedPreferencesManag
 
 
 
-
-
-class SharedPreferencesManager {
-
-    private val pref: SharedPreferences
-
-    constructor(context: Context) {
-        pref = context.applicationContext.getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
-    }
-
-    fun isLoggedIn(): Boolean {
-        return pref.getBoolean(KEY_IS_LOGGED_IN, false)
-    }
-
-    fun setLoggedIn(value: Boolean) {
-        pref.edit().putBoolean(KEY_IS_LOGGED_IN, value).apply()
-    }
-
-    companion object {
-        private const val KEY_IS_LOGGED_IN = "is_logged_in"
-    }
-}

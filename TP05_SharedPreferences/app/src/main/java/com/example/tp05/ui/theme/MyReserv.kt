@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,13 +38,22 @@ import com.siviwe.composeapp.data.Reservation
 fun ResList(
     reservations: List<Reservation>,
     isLoggedIn: Boolean,
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    viewModel: AuthViewModel
 ) {
     if (isLoggedIn) {
         LazyColumn {
             items(reservations.size) { index ->
                 ResItem(res = reservations[index])
             }
+        }
+        Button(onClick = {
+            viewModel.setLoggedIn(false)
+            navHostController.navigate(Destination.Ecran2.route)
+
+        }) {
+            Text(text = "Logout")
+
         }
     } else {
         Text(

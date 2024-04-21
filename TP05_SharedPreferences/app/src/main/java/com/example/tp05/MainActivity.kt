@@ -2,8 +2,9 @@ package com.example.tp05
 
 import AuthViewModel
 import DisplayProfile
-import HomeScreen
+
 import LoginScreen
+import ParkList
 import ResList
 import SharedPreferencesManager
 import android.annotation.SuppressLint
@@ -37,6 +38,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.navifationexample.ui.theme.Destination
 import com.example.tp05.ui.theme.TP05Theme
+import com.siviwe.composeapp.data.Parkings
 import com.siviwe.composeapp.data.Reservations
 
 
@@ -64,20 +66,26 @@ class MainActivity : ComponentActivity() {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Go (navController: NavHostController) {
+    val context = LocalContext.current
     val currentindex =navController.currentBackStackEntryAsState().value?.destination?.route
-    var navigationSelectedItem = remember {
-        mutableStateOf(0)
-    }
-    val reservs = Reservations.MyRerv
 
-    val isLoggedIn: Boolean = false
+
+    val sh = SharedPreferencesManager(context)
+    val isLoggedIn = sh.isLoggedIn()
+
+
+
+    val reservs = Reservations.MyRerv
+    val parks = Parkings.MyPark
+
+
 
     val navigateToLogin: () -> Unit = {
         navController.navigate(Destination.Ecran4.route)
     }
     val authViewModel = remember {
         AuthViewModel(
-            sharedPreferencesManager = SharedPreferencesManager(context = LocalContext.current)
+            sharedPreferencesManager = SharedPreferencesManager(context )
         )
     }
 
@@ -107,28 +115,21 @@ fun Go (navController: NavHostController) {
         },
 
         ) {
-        NavHost(navController = navController, startDestination = Destination.Ecran2.route ){
-            composable(Destination.Ecran2.route){ HomeScreen(navController)}
-            composable(Destination.Ecran3.route){ DisplayProfile(navController)}
+        NavHost(navController = navController, startDestination = Destination.Ecran2.route) {
+            composable(Destination.Ecran2.route) { ParkList(parks) }
+            composable(Destination.Ecran3.route) { DisplayProfile(navController) }
             composable(Destination.Ecran1.route) {
-                ResList(
-                    reservs,
-                    isLoggedIn,
-                    navController
-                )
+                ResList(reservations = reservs, isLoggedIn = isLoggedIn, navHostController = navController, viewModel = authViewModel)
             }
-
             composable(Destination.Ecran4.route) {
-                LoginScreen(
-                    viewModel = authViewModel,
-                    navController
-                )
+                LoginScreen( authViewModel, navController)
             }
-
-
-
-
         }
 
+
+
+
     }
-}
+
+    }
+

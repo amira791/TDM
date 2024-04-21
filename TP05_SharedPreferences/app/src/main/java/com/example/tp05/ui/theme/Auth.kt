@@ -35,9 +35,12 @@ fun LoginScreen(viewModel: AuthViewModel, navHostController: NavHostController) 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf("") }
-    var isLoggedIn by remember { mutableStateOf(false) }
+    var isLoggedIn = remember {
+        mutableStateOf(false)
+    }
 
-    if (isLoggedIn) {
+
+    if (isLoggedIn.value) {
         navHostController.navigate(Destination.Ecran1.route)
     } else {
         Column(
@@ -71,8 +74,7 @@ fun LoginScreen(viewModel: AuthViewModel, navHostController: NavHostController) 
             Button(onClick = {
                 if (viewModel.authenticate(username, password)) {
                     viewModel.setLoggedIn(true)
-                    isLoggedIn = true // Update the isLoggedIn state
-                    navHostController.navigate(Destination.Ecran2.route)
+                    navHostController.navigate(Destination.Ecran1.route)
                 } else {
                     errorMessage = "Invalid username or password"
                 }
