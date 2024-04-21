@@ -22,71 +22,95 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.example.navifationexample.ui.theme.Destination
 import com.example.tp05.R
 
 
+
 @Composable
-fun LoginScreen() {
-    var username = remember { mutableStateOf("") }
-    var password = remember { mutableStateOf("") }
+fun LoginScreen(viewModel: AuthViewModel, navHostController: NavHostController) {
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var isLoggedIn by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(painter = painterResource(id = R.drawable.logo), contentDescription = "Logo")
-        Text(text = "Welcome Back ")
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(text = "Login Into Your Account")
-
-        OutlinedTextField(
-            value = username.value, // Access the value property
-            onValueChange = { username.value = it }, // Update the value using the value property
-            label = { Text(text = "Username") },
-            textStyle = TextStyle(color = Color.Black),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = password.value, // Access the value property
-            onValueChange = { password.value = it }, // Update the value using the value property
-            label = { Text(text = "Password") },
-            visualTransformation = PasswordVisualTransformation()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
-            // log.i("Credential", "Username: ${username.value} Password : ${password.value}")
-        }) {
-            Text(text = "Login")
-        }
-        Text(
-            text = "Forgot your Password ? ",
-            modifier = Modifier.clickable { /* Handle click */ }
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Or Sign In With ")
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(40.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+    if (isLoggedIn) {
+        navHostController.navigate(Destination.Ecran1.route)
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.facebook),
-                contentDescription = "Facebook",
-                modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo"
             )
+            Text(text = "Welcome Back ")
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "Login Into Your Account")
 
-            Image(
-                painter = painterResource(id = R.drawable.google),
-                contentDescription = "Google",
-                modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text(text = "Username") },
+                textStyle = TextStyle(color = Color.Black)
             )
-            Image(
-                painter = painterResource(id = R.drawable.twitter),
-                contentDescription = "Twitter",
-                modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text(text = "Password") },
+                visualTransformation = PasswordVisualTransformation()
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                if (viewModel.authenticate(username, password)) {
+                    viewModel.setLoggedIn(true)
+                    isLoggedIn = true // Update the isLoggedIn state
+                    navHostController.navigate(Destination.Ecran2.route)
+                } else {
+                    errorMessage = "Invalid username or password"
+                }
+            }) { // Correct placement of closing parenthesis
+                Text(text = "Login")
+            }
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+            Text(
+                text = "Forgot your Password ? ",
+                modifier = Modifier.clickable { /* Handle click */ }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Or Sign In With ")
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(40.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.facebook),
+                    contentDescription = "Facebook",
+                    modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+                )
+
+                Image(
+                    painter = painterResource(id = R.drawable.google),
+                    contentDescription = "Google",
+                    modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.twitter),
+                    contentDescription = "Twitter",
+                    modifier = Modifier.size(40.dp).clickable { /* Handle click */ }
+                )
+            }
         }
     }
 }

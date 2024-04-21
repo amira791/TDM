@@ -74,4 +74,5 @@ dependencies {
     testImplementation ("androidx.room:room-testing:$room_version")
     implementation ("androidx.navigation:navigation-compose:2.6.0")
 
+
 }

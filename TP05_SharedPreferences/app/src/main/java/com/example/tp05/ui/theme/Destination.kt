@@ -14,6 +14,7 @@ sealed class Destination (val route: String) {
     object Ecran1: Destination("MyResv")
     object Ecran2: Destination ("Home")
     object Ecran3: Destination ("Profile")
+    object Ecran4: Destination ("Auth")
 
 
 
